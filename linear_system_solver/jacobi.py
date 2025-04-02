@@ -3,7 +3,7 @@ import timeit
 import warnings
 from util import is_diagonally_dominant, any_stopping_criteria_met
 
-def jacobi_solver(A, b, tollerance, max_iterations, initial_x):
+def jacobi_solver(A, b, tolerance, max_iterations, initial_x):
     
     start_time = timeit.default_timer()
 
@@ -11,24 +11,21 @@ def jacobi_solver(A, b, tollerance, max_iterations, initial_x):
     if not is_diagonally_dominant(A):
         warnings.warn("Jacobi method may diverge since A is not diagonally dominant.")
 
-    # Get the diagonal matrix of A
-    D = np.diag(np.diag(A))
-
     # Get the inverse diagonal matrix of A
-    D_inv = np.linalg.inv(D) 
+    D_inv = np.diag(1 / np.diag(A))
     
     # Set up variables 
     iterations = 0
-    x_old = initial_x
+    x_old = np.copy(initial_x)
     x_new = np.copy(x_old)
 
     # needed to get at least one iteration, alternatively iterate once here or set x_new = x_old + 1
-    abs_error = tollerance + 1
-    rel_error = tollerance + 1
+    abs_error = tolerance + 1
+    rel_error = tolerance + 1
 
 
     # iterate until any stopping critieria is met
-    while not any_stopping_criteria_met(iterations, rel_error, max_iterations, tollerance):
+    while not any_stopping_criteria_met(iterations, rel_error, max_iterations, tolerance):
         x_old = np.copy(x_new)
 
         # calculate the residue vector

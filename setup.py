@@ -10,8 +10,8 @@ setup(
         # List your dependencies here
     ],
     author='Mattia Ingrassia, Riccardo Ghilotti',  
-    author_email='Your e-mail',
-    description='A library for checking multiples of 2 and 5.',
+    author_email='m.ingrassia3@campus.unimib.it , r.ghilotti@campus.unimib.it',
+    description='todo',
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',  # License type
