@@ -1,4 +1,5 @@
 import numpy as np
+import warnings
 
 def any_stopping_criteria_met(iterations, rel_error, max_iterations, tolerance):
     """
@@ -46,8 +47,63 @@ def is_diagonally_dominant(matrix, axis=1):
     S = abs_matrix.sum(axis) - D
 
     # If any element of D is less or equal to the respective element of S,
-    # it means that the matrix is not diagonal dominant
+    # it means that the matrix is not diagonally dominant
     if np.any(D <= S):
         return False
     else:
         return True
+
+def is_symmetric(matrix):
+    """
+    Checks whether the given matrix is symmetric.
+
+    Parameters:
+    - matrix: Given matrix, passed as a square NumPy array.
+
+    Returns:
+    - True if the matrix is symmetric.
+    - False otherwise.
+
+    """
+    relative_tolerance = 10e-14
+    absolute_tolerance = 10e-14
+    # allclose returns true if the first two parameters are equal given a tolerance interval
+    return np.allclose(matrix, matrix.T, rtol=relative_tolerance, atol=absolute_tolerance)
+
+def is_square(matrix):
+    """
+    Checks whether the given matrix is square.
+
+    Parameters:
+    - matrix: Given matrix, passed as a square NumPy array.
+
+    Returns:
+    - True if the matrix is square.
+    - False otherwise.
+
+    """
+    if(len(matrix.shape) == 2):
+        if (matrix.shape[0] == matrix.shape[1]):
+            return True
+        else:
+            warnings.warn("Number of rows and columns of the given matrix don't match")
+    else:
+        warnings.warn("Given matrix is not bi-dimensional")
+    return False
+
+
+def is_positive_definite(matrix):
+    """
+    Checks whether the given matrix is positive definite.
+
+    Parameters:
+    - matrix: Given matrix, passed as a square NumPy array.
+
+    Returns:
+    - True if the matrix is definite positive.
+    - False otherwise.
+
+    """
+    # If all eigen values of the given matrix are positive, it means
+    # that the matrix is positive definite
+    return np.all(np.linalg.eigvals(matrix) > 0)
