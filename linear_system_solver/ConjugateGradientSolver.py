@@ -9,15 +9,15 @@ class ConjugateGradientSolver(Solver):
 
     def iterate(self, A, b, x):
         x_old = np.copy(x)
+        
         direction_old = np.copy(self.direction)
         
         residue = self._get_residue(x_old)
-        direction_transposed = np.transpose(direction_old)
         
-        alpha_beta_denominator = np.dot(direction_transposed, np.dot(A, direction_old))
+        alpha_beta_denominator = np.dot(direction_old.T, np.dot(A, direction_old))
         
         # calculate the alpha step and the new x
-        alpha = ( np.dot(direction_transposed, residue)) / alpha_beta_denominator
+        alpha = np.dot(direction_old.T, residue) / alpha_beta_denominator
         
         x_new = x_old + np.dot(alpha, direction_old)
 
@@ -25,7 +25,7 @@ class ConjugateGradientSolver(Solver):
         residue_new = self._get_residue(x_new)
     
         
-        beta = ( np.dot(direction_transposed, np.dot(A, residue_new)) ) / alpha_beta_denominator
+        beta =  np.dot(direction_old.T, np.dot(A, residue_new)) / alpha_beta_denominator
 
         
         direction_new = residue_new - np.dot(beta, direction_old)        

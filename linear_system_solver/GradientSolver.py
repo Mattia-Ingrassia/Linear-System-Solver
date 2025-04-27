@@ -11,10 +11,9 @@ class GradientSolver(Solver):
         # calculate the residue vector and its transposed value
         x_old = np.copy(x)
         residue = self._get_residue(x_old)
-        residue_transposed = np.transpose(residue)
 
         # calculate the alpha step and the new x
-        alpha = ( np.dot(residue_transposed, residue)) / np.dot(residue_transposed, np.dot(A, residue))
+        alpha = ( np.dot(residue.T, residue)) / np.dot(residue.T, np.dot(A, residue))
         x_new = x_old + np.dot(alpha, residue)
         
         return x_new

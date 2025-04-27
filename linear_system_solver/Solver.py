@@ -8,9 +8,9 @@ class Solver(ABC):
 
     class Method(Enum):
         JACOBI = "Jacobi"
-        GAUSS_SEIDL = "Gauss Seidl"
+        GAUSS_SEIDL = "Gauss Seidel"
         GRADIENT = "Gradient"
-        CONJUGATE_GRADIENT = "Conjugate gradient"
+        CONJUGATE_GRADIENT = "Conjugate Gradient"
     
     def __init__(self):
         self.A = None
@@ -39,8 +39,10 @@ class Solver(ABC):
             self.L = np.tril(A)
 
         if self._solver_name == Solver.Method.CONJUGATE_GRADIENT.value:
-            self.direction = self._get_residue(correct_x)
+            self.direction = self._get_residue(self.initial_x)
         
+        print("E' spd? --> ", self.is_symmetric(A) and self.is_positive_definite(A))
+
         x = np.copy(self.initial_x)
 
         start_time = timeit.default_timer()
@@ -85,3 +87,59 @@ class Solver(ABC):
                 return False
             else:
                 return True
+            
+
+    def is_symmetric(self, matrix):
+        """
+        Checks whether the given matrix is symmetric.
+
+        Parameters:
+        - matrix: Given matrix, passed as a square NumPy array.
+
+        Returns:
+        - True if the matrix is symmetric.
+        - False otherwise.
+
+        """
+        relative_tolerance = 10e-14
+        absolute_tolerance = 10e-14
+        # allclose returns true if the first two parameters are equal given a tolerance interval
+        return np.allclose(matrix, matrix.T, rtol=relative_tolerance, atol=absolute_tolerance)
+
+    def is_square(self, matrix):
+        """
+        Checks whether the given matrix is square.
+
+        Parameters:
+        - matrix: Given matrix, passed as a square NumPy array.
+
+        Returns:
+        - True if the matrix is square.
+        - False otherwise.
+
+        """
+        if(len(matrix.shape) == 2):
+            if (matrix.shape[0] == matrix.shape[1]):
+                return True
+            else:
+                warnings.warn("Number of rows and columns of the given matrix don't match")
+        else:
+            warnings.warn("Given matrix is not bi-dimensional")
+        return False
+
+
+    def is_positive_definite(self, matrix):
+        """
+        Checks whether the given matrix is positive definite.
+
+        Parameters:
+        - matrix: Given matrix, passed as a square NumPy array.
+
+        Returns:
+        - True if the matrix is definite positive.
+        - False otherwise.
+
+        """
+        # If all eigen values of the given matrix are positive, it means
+        # that the matrix is positive definite
+        return np.all(np.linalg.eigvals(matrix) > 0)
