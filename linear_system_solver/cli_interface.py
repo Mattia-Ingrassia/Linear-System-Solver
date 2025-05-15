@@ -5,104 +5,126 @@ import json
 
 from scipy.io import mmread
 
-from JacobiSolver import JacobiSolver
-from GaussSeidelSolver import GaussSeidelSolver
-from GradientSolver import GradientSolver
-from ConjugateGradientSolver import ConjugateGradientSolver
+from solvers.base_solver import SolverMethod
+from solvers.jacobi import JacobiSolver
+from solvers.gauss_seidel import GaussSeidelSolver
+from solvers.gradient import GradientSolver
+from solvers.conjugate_gradient import ConjugateGradientSolver
 
-from plot_generator import create_plot, create_confront_plot, create_sparsity_plot
+from plot_generator import create_confront_plot, create_sparsity_plot
 
 DEFAULT_TOLERANCES = [10e-4, 10e-6, 10e-8, 10e-10]
-SAVE_PATH = "results"
+DEFAULT_RESULTS_DIR  = "results"
 
 @click.command()
-@click.option('--path', type=click.Path(exists=True), required=True, help="File contenente la matrice A in formato mtx.")
-@click.option('--x', type=click.Path(exists=True), default = None, help="File contenente il vettore correct_x, che rappresenta la soluzione ideale del sistema.")
-@click.option('--b', type=click.Path(exists=True), default = None, help="File contenente il vettore b, ovvero il vettore dei termini noti.")
-@click.option('--tol', type=float, multiple=True, help="Array di scalari che rappresentano la tolleranza.")
-def run_benchmark(path, b, x, tol):
-    
-    A = load_matrix(path)
-    
+@click.option('--a_path', type=click.Path(exists=True), required=True, help="File containing the A matrix in .mtx format.")
+@click.option('--b_path', type=click.Path(exists=True), default = None, help="File containing the b vector, representing rhs vector.\n.npy, .txt and .csv files are supported.")
+@click.option('--x_path', type=click.Path(exists=True), default = None, help="File containing the correct_x vector, representing the right solution of the system.\n.npy, .txt and .csv files are supported.")
+@click.option('--tol', type=float, multiple=True, help="Array of scalars representing the tolerance.")
+@click.option('--verbose', type=bool, default = True, help="True if you want comments on execution, False otherwise.")
+
+def run_benchmark(a_path, b_path, x_path, tol, verbose):
+    """Run benchmarks for different solver methods with given tolerances."""
+
     # Get the name of the matrix
-    matrix_name = os.path.splitext(os.path.basename(path))[0]
+    matrix_name = os.path.splitext(os.path.basename(a_path))[0]
+    matrix_results_dir = os.path.join(DEFAULT_RESULTS_DIR, matrix_name)
+    os.makedirs(matrix_results_dir, exist_ok=True)
 
-    # We manage the matrix as a dense matrix
-    A = A.toarray()
+    matrix_images_dir = os.path.join(matrix_results_dir, "images")
+    os.makedirs(matrix_images_dir, exist_ok=True)
 
+    A = load_matrix(a_path)
     
-
     # If the solution is not given it is initialized as an array of ones
-    if x is None:
+    if x_path is None:
         x = np.ones(len(A))
-    
+    else:
+        x = load_vector(x_path)
+        
     # If RHS is not given it gets calculated
-    if b is None:
-        b = np.dot(A,x)
+    if b_path is None:
+        b = np.dot(A, x)
+    else:
+        b = load_vector(b_path)
     
     # if the tolerance is not given the default array is used
     if len(tol) == 0:
         tolerances = DEFAULT_TOLERANCES
     else:
         tolerances = list(tol)
+    
+    solvers = {
+        SolverMethod.JACOBI.value: JacobiSolver(),
+        SolverMethod.GAUSS_SEIDEL.value: GaussSeidelSolver(),
+        SolverMethod.GRADIENT.value: GradientSolver(),
+        SolverMethod.CONJUGATE_GRADIENT.value: ConjugateGradientSolver()
+    }
 
-    temp_solver = JacobiSolver()
-    if temp_solver.check_matrix_properties(A):
-        print("Matrix passed all checks (square, symmetric, positive definite)")
+    total_data = []
+
+    for tolerance in tolerances:
+        if verbose:
+            click.echo(f"\nRunning solvers with tolerance {tolerance}:")
+        
+        solutions = []
+        
+        for name, solver in solvers.items():
+            if verbose:
+                click.echo(f" - Running {name}...")
+
+            result = solver.solve(A, b, tolerance, x, verbose=verbose)
+     
+            solutions.append(result)
+            
+            #troppo ingombrante
+            #if verbose:
+            #    click.echo(f"  {result}")
+
+        tolerance_result = {
+            "tolerance": tolerance,
+            "solutions": solutions
+        }
+        total_data.append(tolerance_result)
 
 
+    with open(os.path.join(matrix_results_dir, "results.json"), "w") as f:
+        json.dump(total_data, f, indent=4)
 
-        total_data = []
-        for tolerance in tolerances:
-            jacobi = JacobiSolver().solve(A, b, tolerance, x)
-            gauss_seidel = GaussSeidelSolver().solve(A, b, tolerance, x)
-            gradient = GradientSolver().solve(A, b, tolerance, x)
-            conjugate_gradient = ConjugateGradientSolver().solve(A, b, tolerance, x)
-            single_result = {
-                "tolerance": tolerance,
-                "solutions": [ jacobi, gauss_seidel, gradient, conjugate_gradient ]
-            }
-            total_data.append(single_result)
-
-        if not os.path.exists(f"{SAVE_PATH}/{matrix_name}"):       
-            os.makedirs(f"{SAVE_PATH}/{matrix_name}")
-
-        with open(f"{SAVE_PATH}/{matrix_name}/results.json", "w") as f:
-            json.dump(total_data, f, indent=4)
-
-
-
-        generate_plots(matrix_name)
-
-
-
-
-
-
-def generate_plots(matrix_name):
-    with open(f"{SAVE_PATH}/{matrix_name}/results.json", "r") as f:
-        total_data = json.load(f)
-        create_confront_plot(total_data, matrix_name)
+    # Generate plots after all calculations
+    create_confront_plot(total_data, matrix_name, matrix_images_dir)
+    create_sparsity_plot(A, matrix_name, matrix_results_dir)
 
 
 
 def load_matrix(path):
+    """Load matrix data from .mtx file"""
     if path.endswith('.mtx'):
-        return mmread(path)
+        # We manage the matrix as a dense matrix
+        A = mmread(path)
+        A = A.toarray()
+        return A
     else:
-        click.echo("La matrice deve essere in formato .mtx")
+        raise ValueError("La matrice deve essere in formato .mtx")
+ 
+def load_vector(path):
+    if path.endswith('.npy'):
+        return np.load(path)
+    elif path.endswith('.txt'):
+        return np.loadtxt(path)
+    elif path.endswith('.csv'):
+        return np.loadtxt(path, delimiter=',')
+    else:
+        raise ValueError("Format file for vectors is not supported.(supported filetypes: .npy, .txt, .csv)")
 
-@click.command()
-@click.option('--path', type=click.Path(exists=True), required=True, help="File contenente la matrice A in formato mtx.")
-def print_sparsity_pattern(path):
-    if path.endswith('.mtx'):
-        mat = mmread(path)
-        # Get the name of the matrix
-        matrix_name = os.path.splitext(os.path.basename(path))[0]
-        A = mat.toarray()
-        create_sparsity_plot(A, matrix_name)
 
+#@click.group()
+#def cli():
+#    """Linear system solver benchmarking tool."""
+#    pass
+
+#cli.add_command(run_benchmark)
 
 if __name__ == "__main__":
+    #cli()
     run_benchmark()
-    #print_sparsity_pattern()
