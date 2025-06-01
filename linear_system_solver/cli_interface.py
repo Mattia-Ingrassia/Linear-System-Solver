@@ -48,7 +48,7 @@ def run_benchmark(a_path, b_path, x_path, tol, verbose):
     else:
         b = load_vector(b_path)
     
-    # if the tolerance is not given the default array is used
+    # If the tolerance is not given the default array is used
     if len(tol) == 0:
         tolerances = DEFAULT_TOLERANCES
     else:
@@ -76,10 +76,6 @@ def run_benchmark(a_path, b_path, x_path, tol, verbose):
             result = solver.solve(A, b, tolerance, x, verbose=verbose)
      
             solutions.append(result)
-            
-            #troppo ingombrante
-            #if verbose:
-            #    click.echo(f"  {result}")
 
         tolerance_result = {
             "tolerance": tolerance,
@@ -102,7 +98,7 @@ def load_matrix(path):
     if path.endswith('.mtx'):
         # We manage the matrix as a dense matrix
         A = mmread(path)
-        A = A.toarray()
+        A = A.toarray() #type: ignore
         return A
     else:
         raise ValueError("La matrice deve essere in formato .mtx")
@@ -118,13 +114,5 @@ def load_vector(path):
         raise ValueError("Format file for vectors is not supported.(supported filetypes: .npy, .txt, .csv)")
 
 
-#@click.group()
-#def cli():
-#    """Linear system solver benchmarking tool."""
-#    pass
-
-#cli.add_command(run_benchmark)
-
 if __name__ == "__main__":
-    #cli()
     run_benchmark()

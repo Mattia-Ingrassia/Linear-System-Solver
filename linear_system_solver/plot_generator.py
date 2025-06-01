@@ -26,10 +26,9 @@ def create_confront_plot(data, matrix_name, output_dir):
     results_errors = {}
 
     for method in SolverMethod:
-        # if method != SolverMethod.GRADIENT:
-            results_iterations[method.value] = []
-            results_time[method.value] = []
-            results_errors[method.value] = []
+        results_iterations[method.value] = []
+        results_time[method.value] = []
+        results_errors[method.value] = []
 
     tolerances = []
     
@@ -38,14 +37,13 @@ def create_confront_plot(data, matrix_name, output_dir):
         tolerances.append(tolerance)
         
         for single_solution in tolerance_data["solutions"]:
-            # if single_solution["solver_name"] != SolverMethod.GRADIENT.value:
-                results_iterations[single_solution["solver_name"]].append(single_solution["iterations"])
-                results_time[single_solution["solver_name"]].append(single_solution["time_spent"])
-                results_errors[single_solution["solver_name"]].append(single_solution["relative_error"])
+            results_iterations[single_solution["solver_name"]].append(single_solution["iterations"])
+            results_time[single_solution["solver_name"]].append(single_solution["time_spent"])
+            results_errors[single_solution["solver_name"]].append(single_solution["relative_error"])
 
     markers = ['o', 's', '^', 'd']
     
-    # iterations plot
+    # Iterations plot
 
     plt.figure(figsize=(10, 6))
 
@@ -60,6 +58,7 @@ def create_confront_plot(data, matrix_name, output_dir):
     plt.ylabel('Number of Iterations')
     plt.title(f'Comparison of Methods by Iterations - {matrix_name}')
     plt.xscale('log')
+    plt.yscale('log')
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
@@ -68,7 +67,7 @@ def create_confront_plot(data, matrix_name, output_dir):
 
 
 
-    # time plot
+    # Time plot
 
     plt.figure(figsize=(10, 6))
 
@@ -83,13 +82,14 @@ def create_confront_plot(data, matrix_name, output_dir):
     plt.ylabel('Execution time (seconds)')
     plt.title(f'Comparison of Methods by Execution Time - {matrix_name}')
     plt.xscale('log')
+    plt.yscale('log')
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
 
     plt.savefig(os.path.join(output_dir, f"{matrix_name}_time_comparison.png"))
 
-    # errors plot
+    # Errors plot
 
     plt.figure(figsize=(10, 6))
 
@@ -97,6 +97,7 @@ def create_confront_plot(data, matrix_name, output_dir):
     for method in results_errors.keys():
         plt.plot(tolerances, results_errors[method], marker=markers[marker_index], label=method)
         marker_index += 1
+    
     # Format the plot
     plt.gca().invert_xaxis()  # Invert x-axis to see tolerances in descending order
     plt.xlabel('Tolerance (log scale)')
@@ -128,15 +129,13 @@ def create_sparsity_plot(matrix, matrix_name, output_dir):
     not_zero_counter = np.count_nonzero(matrix)
     matrix_density = not_zero_counter / (matrix.shape[0] * matrix.shape[1]) * 100
     
-    #cercare formula adatta
+    # Change marker size for readability
     markersize = max(0.05, min(1.0, 100 / (matrix.shape[0])))
 
     plt.figure(figsize=(10, 10))
-    
-    
+        
     plt.title(f"Distribuzione elementi di {matrix_name}\nSize: {matrix.shape[0]}x{matrix.shape[1]}, Non-zeros: {not_zero_counter} ({matrix_density:.2f}%)")
     plt.spy(matrix, markersize= markersize)
-
 
 
     plt.savefig(os.path.join(output_dir, f"{matrix_name}_sparsity_pattern.png"))

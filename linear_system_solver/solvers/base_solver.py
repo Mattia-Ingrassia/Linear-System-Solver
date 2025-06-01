@@ -6,16 +6,12 @@ from typing import Optional
 import timeit
 import warnings
 
-# Riguardare la consegna sui controlli
-
 class SolverMethod(str, Enum):
     """Enum for available solver methods"""
     JACOBI = "Jacobi"
     GAUSS_SEIDEL = "Gauss Seidel"
     GRADIENT = "Gradient"
     CONJUGATE_GRADIENT = "Conjugate Gradient"
-
-
 
 
 class Solver(ABC):
@@ -78,9 +74,8 @@ class Solver(ABC):
           
         """
         
-        # set up solver settings
+        # Set up solver settings
         self.verbose = verbose
-        # get abs of given tolerance
         self.tolerance = tolerance
 
         if max_iterations is not None:
@@ -181,7 +176,7 @@ class Solver(ABC):
     
     def _get_relative_error(self,
                              x: NDArray[np.float64], 
-                             correct_x: NDArray[np.float64]) -> np.float64:
+                             correct_x: NDArray[np.float64]) -> np.floating:
         """
         Calculates the relative error of the given x.
 
@@ -221,7 +216,10 @@ class Solver(ABC):
         bool
             False if any of the stopping criteria is met, True otherwise.
         """
-        if(self.iterations > self.max_iterations):
+        if self.tolerance is None:
+            warnings.warn(f"{self.method} error: tolerance is None.")
+            return False
+        elif(self.iterations > self.max_iterations):
             warnings.warn(f"{self.method} with tolerance {self.tolerance} stopped because the max iterations number has been reached. Method hasn't converged.")
             return False
         else:

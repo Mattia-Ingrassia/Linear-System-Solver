@@ -66,7 +66,7 @@ class GaussSeidelSolver(Solver):
     
 
 
-    # direct method for solving triangular linear systems
+    # Direct method for solving triangular linear systems
     def _tril_matrix_solver(self,
                             rhs: NDArray[np.float64]) -> NDArray[np.float64]:
         """
@@ -83,6 +83,9 @@ class GaussSeidelSolver(Solver):
             New solution vector 
         """
         matrix = self.L
+        if matrix is None:
+            raise ValueError("Gauss-Seidel error: Lower triangular matrix is None.")
+        
         solutions = np.zeros(len(matrix))
         solutions[0] = rhs[0] / matrix[0][0]
         for i in range(1, len(matrix)) :

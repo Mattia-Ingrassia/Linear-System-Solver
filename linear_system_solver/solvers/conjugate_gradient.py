@@ -10,7 +10,7 @@ class ConjugateGradientSolver(Solver):
     def __init__(self):
         super().__init__()
         self.method = SolverMethod.CONJUGATE_GRADIENT.value
-        self.direction = None
+        self.direction = np.zeros(0, dtype=np.float64)
 
     def _setup_solver(self, 
                       A: NDArray[np.float64], 
@@ -61,12 +61,12 @@ class ConjugateGradientSolver(Solver):
         
         alpha_beta_denominator = np.dot(direction_old.T, np.dot(A, direction_old))
         
-        # calculate the alpha step and the new x
+        # Calculate the alpha step and the new x
         alpha = np.dot(direction_old.T, residue) / alpha_beta_denominator
         
         x_new = x_old + np.dot(alpha, direction_old)
 
-        #new residue
+        # Calculate the new residue
         residue_new = self._get_residue(A, b, x_new)
     
         
