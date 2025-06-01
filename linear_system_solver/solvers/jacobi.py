@@ -12,7 +12,7 @@ class JacobiSolver(Solver):
     def __init__(self):
         super().__init__()
         self.method = SolverMethod.JACOBI.value
-        self.D_inv = None
+        self.D_inv = np.zeros(0, dtype=np.float64)
 
     def _setup_solver(self, 
                       A: NDArray[np.float64], 
@@ -37,9 +37,8 @@ class JacobiSolver(Solver):
             warnings.warn("Jacobi might not converge since the matrix is not diagonally dominant.", stacklevel=2)
 
         
-        # Get the inverse of diagonal elements        
-        self.D_inv = np.diag(1 / np.diag(A)) 
-
+        # Get the inverse diagonal       
+        self.D_inv = 1 / np.diag(A) 
 
 
 
@@ -63,9 +62,8 @@ class JacobiSolver(Solver):
         -------
         ndarray
             New solution vector after one iteration.
-        """
-        x_old = np.copy(x)
-        x_new = x_old + np.matmul(self.D_inv, self._get_residue(A, b, x_old))
+        """        
+        x_new = x + self.D_inv * self._get_residue(A, b, x)
         return x_new
     
 
