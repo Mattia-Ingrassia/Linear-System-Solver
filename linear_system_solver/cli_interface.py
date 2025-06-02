@@ -61,6 +61,14 @@ def run_benchmark(a_path, b_path, x_path, tol, verbose):
         SolverMethod.CONJUGATE_GRADIENT.value: ConjugateGradientSolver()
     }
 
+    solvers_color = {
+        SolverMethod.JACOBI.value: "green",
+        SolverMethod.GAUSS_SEIDEL.value: "yellow",
+        SolverMethod.GRADIENT.value: "magenta",
+        SolverMethod.CONJUGATE_GRADIENT.value: "cyan"
+    }
+
+
     total_data = []
 
     for tolerance in tolerances:
@@ -70,19 +78,21 @@ def run_benchmark(a_path, b_path, x_path, tol, verbose):
         solutions = []
         
         for name, solver in solvers.items():
-            if verbose:
-                click.echo(f" - Running {name}...")
-
+            
             result = solver.solve(A, b, tolerance, x, verbose=verbose)
      
             solutions.append(result)
+            
+            if verbose:
+                click.secho(f"Results for {name} - tolerance {tolerance}:", fg=solvers_color[name])
+                click.secho(f"\tConverged: {result["converged"]}", fg=solvers_color[name])
+                click.secho(f"\tRelative Error: {result["relative_error"]}, Iterations: {result["iterations"]}, Time spent:{result["time_spent"]}s", fg=solvers_color[name])
 
         tolerance_result = {
             "tolerance": tolerance,
             "solutions": solutions
         }
         total_data.append(tolerance_result)
-
 
     with open(os.path.join(matrix_results_dir, "results.json"), "w") as f:
         json.dump(total_data, f, indent=4)

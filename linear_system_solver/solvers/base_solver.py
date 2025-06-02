@@ -224,8 +224,6 @@ class Solver(ABC):
             return False
         else:
             if np.linalg.norm(self._get_residue(A, b, x)) / np.linalg.norm(b) < self.tolerance :
-                if self.verbose:
-                    print(f"{self.method} with tolerance {self.tolerance} stopped because the correct result with desired tolerance has been reached. Method has converged.")
                 return False
             else:
                 return True

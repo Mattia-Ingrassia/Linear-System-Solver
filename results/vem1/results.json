@@ -1688,7 +1688,7 @@
                 ],
                 "relative_error": 0.03533256410819242,
                 "iterations": 755,
-                "time_spent": 0.2168453999911435,
+                "time_spent": 0.2891920999973081,
                 "solver_name": "Jacobi",
                 "converged": true
             },
@@ -3378,7 +3378,7 @@
                 ],
                 "relative_error": 0.03511170647295885,
                 "iterations": 379,
-                "time_spent": 0.9554811999842059,
+                "time_spent": 1.2407265000074403,
                 "solver_name": "Gauss Seidel",
                 "converged": true
             },
@@ -5068,7 +5068,7 @@
                 ],
                 "relative_error": 0.027211993589952344,
                 "iterations": 528,
-                "time_spent": 0.22232050000457093,
+                "time_spent": 0.28957850000006147,
                 "solver_name": "Gradient",
                 "converged": true
             },
@@ -6758,7 +6758,7 @@
                 ],
                 "relative_error": 0.000523917121177642,
                 "iterations": 34,
-                "time_spent": 0.025061000022105873,
+                "time_spent": 0.03382620000047609,
                 "solver_name": "Conjugate Gradient",
                 "converged": true
             }
@@ -8453,7 +8453,7 @@
                 ],
                 "relative_error": 0.0003532949615040863,
                 "iterations": 1874,
-                "time_spent": 0.5280761999893002,
+                "time_spent": 0.6929785999964224,
                 "solver_name": "Jacobi",
                 "converged": true
             },
@@ -10143,7 +10143,7 @@
                 ],
                 "relative_error": 0.00035023882334972385,
                 "iterations": 939,
-                "time_spent": 2.393604399985634,
+                "time_spent": 3.1043797000020277,
                 "solver_name": "Gauss Seidel",
                 "converged": true
             },
@@ -11833,7 +11833,7 @@
                 ],
                 "relative_error": 0.00026901347641528815,
                 "iterations": 1252,
-                "time_spent": 0.5773660000122618,
+                "time_spent": 0.696393000005628,
                 "solver_name": "Gradient",
                 "converged": true
             },
@@ -13523,7 +13523,7 @@
                 ],
                 "relative_error": 2.7571433745544286e-06,
                 "iterations": 42,
-                "time_spent": 0.040318199986359105,
+                "time_spent": 0.050479799989261664,
                 "solver_name": "Conjugate Gradient",
                 "converged": true
             }
@@ -15218,7 +15218,7 @@
                 ],
                 "relative_error": 3.532642848790987e-06,
                 "iterations": 2993,
-                "time_spent": 0.8511754999926779,
+                "time_spent": 1.0781305999989854,
                 "solver_name": "Jacobi",
                 "converged": true
             },
@@ -16908,7 +16908,7 @@
                 ],
                 "relative_error": 3.5220738969133894e-06,
                 "iterations": 1498,
-                "time_spent": 3.5610651000170037,
+                "time_spent": 4.940062699999544,
                 "solver_name": "Gauss Seidel",
                 "converged": true
             },
@@ -18598,7 +18598,7 @@
                 ],
                 "relative_error": 2.703991476594958e-06,
                 "iterations": 1974,
-                "time_spent": 0.8844599000003655,
+                "time_spent": 1.0900511000072584,
                 "solver_name": "Gradient",
                 "converged": true
             },
@@ -20288,7 +20288,7 @@
                 ],
                 "relative_error": 5.3326244874209095e-08,
                 "iterations": 49,
-                "time_spent": 0.03954369999701157,
+                "time_spent": 0.04758330000913702,
                 "solver_name": "Conjugate Gradient",
                 "converged": true
             }
@@ -21983,7 +21983,7 @@
                 ],
                 "relative_error": 3.53233640154827e-08,
                 "iterations": 4112,
-                "time_spent": 1.2154691999894567,
+                "time_spent": 1.496550500000012,
                 "solver_name": "Jacobi",
                 "converged": true
             },
@@ -23673,7 +23673,7 @@
                 ],
                 "relative_error": 3.5128464281590456e-08,
                 "iterations": 2058,
-                "time_spent": 4.987011999997776,
+                "time_spent": 6.908305899996776,
                 "solver_name": "Gauss Seidel",
                 "converged": true
             },
@@ -25363,7 +25363,7 @@
                 ],
                 "relative_error": 2.7214328287017577e-08,
                 "iterations": 2696,
-                "time_spent": 1.1750663999991957,
+                "time_spent": 1.477175799998804,
                 "solver_name": "Gradient",
                 "converged": true
             },
@@ -27053,7 +27053,7 @@
                 ],
                 "relative_error": 3.720192757112539e-10,
                 "iterations": 56,
-                "time_spent": 0.046271200000774115,
+                "time_spent": 0.054729700001189485,
                 "solver_name": "Conjugate Gradient",
                 "converged": true
             }
