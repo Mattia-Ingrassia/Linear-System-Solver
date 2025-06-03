@@ -32,7 +32,7 @@ class Solver(ABC):
               A: NDArray[np.float64], 
               b: NDArray[np.float64], 
               tolerance: float,
-              correct_x: Optional[NDArray[np.float64]] = None,
+              correct_x: NDArray[np.float64],
               max_iterations: Optional[int] = 20000,
               verbose: bool = True):
 
@@ -50,10 +50,7 @@ class Solver(ABC):
         tolerance : float
             Convergence tolerance
         
-        initial_x : ndarray, optional
-            Initial guess for the solution. Default is a vector containing only zeros.
-        
-        correct_x : ndarray, optional
+        correct_x : ndarray
             True solution for error calculation. Default is a vector containing only ones.
 
         max_iterations : int, optional
@@ -80,9 +77,6 @@ class Solver(ABC):
 
         if max_iterations is not None:
             self.max_iterations = max_iterations
-            
-        if correct_x is None:
-            correct_x = np.ones(len(b))
 
         initial_x = np.zeros(len(b))
 
