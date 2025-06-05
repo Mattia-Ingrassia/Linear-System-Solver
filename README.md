@@ -51,11 +51,12 @@ The iterative methods analyzed are:
     ```sh
     pip install -r requirements.txt
     ```
+
 ---
 
 ## Project Structure
 
-```
+```sh
 ├── cli_interface.py           # Main CLI application
 ├── plot_generator.py          # Visualization utilities
 ├── solvers/
@@ -72,7 +73,7 @@ The iterative methods analyzed are:
 ### Basic Usage
 
 ```bash
-python cli_interface.py --a_path matrix.mtx
+python cli_interface.py --a_path "data/spa1.mtx"
 ```
 
 ### Advanced Usage
@@ -100,15 +101,17 @@ python cli_interface.py \
 
 - **Missing b vector**: Calculated as `b = A * x`
 - **Missing x vector**: Initialized as a vector of ones
-- **Missing tolerances**: Uses default values `[1e-4, 1e-6, 1e-8, 1e-10]`
+- **Missing tolerances**: Uses default values `[10e-4, 10e-6, 10e-8, 10e-10]`
 
 ## Supported File Formats
 
 ### Matrix Format
+
 - **Input**: `.mtx` (Matrix Market format)
 - **Processing**: Converted to dense format for computation
 
 ### Vector Formats
+
 - **`.npy`**: NumPy binary format
 - **`.txt`**: Plain text (space-separated values)
 - **`.csv`**: Comma-separated values
@@ -116,7 +119,8 @@ python cli_interface.py \
 ## Output
 
 ### Directory Structure
-```
+
+```sh
 results/
 └── matrix_name/
     ├── results.json             
@@ -128,6 +132,7 @@ results/
 ```
 
 ### Results JSON Format
+
 ```json
 [
     {
