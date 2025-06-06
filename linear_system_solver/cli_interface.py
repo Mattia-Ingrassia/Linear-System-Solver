@@ -13,7 +13,7 @@ from solvers.conjugate_gradient import ConjugateGradientSolver
 
 from plot_generator import create_confront_plot, create_sparsity_plot
 
-DEFAULT_TOLERANCES = [10e-4, 10e-6, 10e-8, 10e-10]
+DEFAULT_TOLERANCES = [1e-4, 1e-6, 1e-8, 1e-10]
 DEFAULT_RESULTS_DIR  = "results"
 
 @click.command()
